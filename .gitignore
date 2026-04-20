@@ -1,0 +1,32 @@
+# Python Environment & Cache
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local Vector Databases
+local_chroma_db/
+
+# Heavy Datasets (Do not commit to Git)
+MedQA-USMLE/
+mimic-iv-clinical-database-demo-2.2/
+
+# Logs and Local System State
+backend_execution.log
+
+# Generated Outputs & Data
+*.jsonl
+mimic_bridge_outputs.jsonl
+mimic_bridge_outputs_demo.jsonl
+
+# macOS System Files
+.DS_Store
+
+# Environment Variables / Secrets (Best practice for the future)
+.env
+
+run_all.sh
+run_demo_fast.sh
+RUN_PROJECT.md
+
