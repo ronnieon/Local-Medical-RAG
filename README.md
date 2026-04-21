@@ -430,3 +430,25 @@ This project is designed for local execution. Still, practical safety depends on
 ---
 
 This README is intentionally detailed to support both demonstration and maintainability.
+
+In the architecture for this local Medical RAG system, the term "database" refers to three specific datasets that power different phases of the pipeline, plus the actual database software used to store the embeddings. 
+
+Here is the breakdown of the three core data sources and their specific uses:
+
+### 1. MIMIC-IV (The Input Data)
+* **What it is:** A massive, de-identified database of real-world electronic health records from intensive care unit patients at the Beth Israel Deaconess Medical Center.
+* **Specific Use:** It acts as the **simulation input** for your pipeline. You feed raw, unstructured physician notes and discharge summaries from MIMIC-IV into your *Extraction Agent* to see if your local model can accurately pull out patient symptoms, ages, and medications without hallucinating.
+
+### 2. PubMed Central / PMC (The Knowledge Base)
+* **What it is:** A free full-text archive of biomedical and life sciences journal literature at the U.S. National Institutes of Health's National Library of Medicine.
+* **Specific Use:** It acts as the **ground truth** for your RAG system. Your scripts fetch targeted papers from PMC, break them into semantic chunks, and embed them. When the *Retrieval Agent* needs to look up a symptom or treatment, it searches against this specific, highly vetted literature to prevent the LLM from relying on its own potentially flawed training data.
+
+### 3. MedQA / USMLE (The Evaluation Benchmark)
+* **What it is:** A dataset consisting of complex, multiple-choice questions collected from the United States Medical Licensing Examination (USMLE).
+* **Specific Use:** It acts as your **grading rubric**. Because you cannot manually check every answer your system generates, you use MedQA in Phase 4 to automatically test your system. You feed a MedQA question into your pipeline and mathematically compare your system's generated answer against the MedQA ground-truth answer to calculate your exact accuracy rate.
+
+---
+
+**The Software Database: ChromaDB**
+While the three above are the *data sources*, the actual database engine running under the hood is **ChromaDB** (or FAISS). 
+* **Specific Use:** It is a local Vector Database. It takes the mathematical embeddings (the vectors) of the PMC medical literature and stores them locally on your MacBook. This is what allows your Retrieval Agent to perform lightning-fast semantic searches across thousands of documents without needing an internet connection.
